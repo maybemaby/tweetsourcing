@@ -1,0 +1,5 @@
+*.jpg
+venv
+.vscode
+__pycache__
+credentials.py
