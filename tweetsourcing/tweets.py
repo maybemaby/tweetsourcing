@@ -19,8 +19,11 @@ def save_images(tweet_object):
     image_url = set()
     for image in tweet_images:
         image_url.add(image["media_url"])
-        res = requests.get(image["media_url"])
-        res.raise_for_status()
+        try:
+            res = requests.get(image["media_url"])
+            res.raise_for_status()
+        except:
+            return print("No picture found.")
         image_file = open("image1.jpg", "wb")
         image_file.write(res.content)
         image_file.close()
