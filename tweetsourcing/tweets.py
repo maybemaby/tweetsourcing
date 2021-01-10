@@ -8,15 +8,18 @@ def create_api():
     return tweepy.API(auth)
 
 
-def retrieve_tweet():
+def retrieve_tweet(api_object):
     tweet_url = input("Enter the URL of the tweet you would like analyzed.\n")
     tweet_id = tweet_url.split("/status/")[1]
-    return api.get_status(tweet_id)
+    return api_object.get_status(tweet_id, tweet_mode="extended")
 
 
 def save_images(tweet_object):
-    tweet_images = tweet_object.entities["media"]
-    image_url = set()
+    try:
+        tweet_images = tweet_object.entities["media"]
+        image_url = set()
+    except KeyError:
+        return print("No picture found.")
     for image in tweet_images:
         image_url.add(image["media_url"])
         try:
@@ -31,6 +34,6 @@ def save_images(tweet_object):
 
 if __name__ == "__main__":
     api = create_api()
-    tweet = retrieve_tweet()
-    tweet_body = tweet.text
+    tweet = retrieve_tweet(api)
+    tweet_body = print(tweet.full_text)
     save_images(tweet)
