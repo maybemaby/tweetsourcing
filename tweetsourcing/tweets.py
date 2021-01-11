@@ -3,18 +3,40 @@ from credentials import *
 
 
 def create_api():
+    """Creates api object from tweepy
+    using api auth credentials.
+    """
     auth = tweepy.OAuthHandler(api_key, secret_key)
     auth.set_access_token(access_token, access_token_secret)
     return tweepy.API(auth)
 
 
 def retrieve_tweet(api_object):
+    """Used to get a tweet object from authorized
+    api object.
+
+    Inputs
+    ------
+    Tweepy api object
+    Returns
+    -------
+    Tweepy tweet object in extended mode.
+    """
     tweet_url = input("Enter the URL of the tweet you would like analyzed.\n")
     tweet_id = tweet_url.split("/status/")[1]
     return api_object.get_status(tweet_id, tweet_mode="extended")
 
 
 def save_images(tweet_object):
+    """Used to save any images from desired tweet.
+
+    Inputs
+    ------
+    Tweepy tweet object
+    Returns
+    -------
+    Saved images in the project folder.
+    """
     try:
         tweet_images = tweet_object.entities["media"]
         image_url = set()
