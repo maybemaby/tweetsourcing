@@ -12,4 +12,22 @@ if __name__ == "__main__":
     startnum = 1
     results = googlesearch.kword_search(generated_query, startnum)
     news = googlesearch.categorize_news(results, wordlist)
-    print(news)
+    while int(startnum) <= 50:
+        for site_dict in news.values():
+            if site_dict["title"] == "":
+                results = googlesearch.kword_search(generated_query, startnum)
+                news = googlesearch.categorize_news(results, wordlist, news)
+                startnum = news["next_page"]
+                break
+
+    for k, v in news.items():
+        try:
+            print(
+                f"""
+            Title: {v['title']}
+            Link: {v['link']}
+            Keyword Matches: {v['matches']}
+            """
+            )
+        except TypeError:
+            break

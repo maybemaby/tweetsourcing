@@ -16,24 +16,28 @@ def kword_search(query, startnum):
     google customsearch Results object.
     """
     service = build("customsearch", "v1", developerKey=cse_api_key)
-    res = service.cse().list(q=query, cx=cse_id, start=startnum).execute()
+    res = service.cse().list(q=query, cx=cse_id, lr="lang_en", start=startnum).execute()
     return res
 
 
-def categorize_news(results_object, tweet_kwords):
+def categorize_news(results_object, tweet_kwords, *args):
     result_items = results_object["items"]
-    news = {
-        "apnews.com": {"title": "", "link": "", "matches": 0},
-        "abcnews.go.com": {"title": "", "link": "", "matches": 0},
-        "www.cnn.com": {"title": "", "link": "", "matches": 0},
-        "www.foxnews.com": {"title": "", "link": "", "matches": 0},
-        "www.msnbc.com": {"title": "", "link": "", "matches": 0},
-        "www.nationalreview.com": {"title": "", "link": "", "matches": 0},
-        "www.nytimes.com": {"title": "", "link": "", "matches": 0},
-        "www.reuters.com": {"title": "", "link": "", "matches": 0},
-        "www.theepochtimes.com": {"title": "", "link": "", "matches": 0},
-        "www.washingtonpost.com": {"title": "", "link": "", "matches": 0},
-    }
+    next_page = results_object["queries"]["nextPage"][0]["startIndex"]
+    if len(args) > 0:
+        news = args[0]
+    else:
+        news = {
+            "apnews.com": {"title": "", "link": "", "matches": 0},
+            "abcnews.go.com": {"title": "", "link": "", "matches": 0},
+            "www.cnn.com": {"title": "", "link": "", "matches": 0},
+            "www.foxnews.com": {"title": "", "link": "", "matches": 0},
+            "www.msnbc.com": {"title": "", "link": "", "matches": 0},
+            "www.nationalreview.com": {"title": "", "link": "", "matches": 0},
+            "www.nytimes.com": {"title": "", "link": "", "matches": 0},
+            "www.reuters.com": {"title": "", "link": "", "matches": 0},
+            "www.theepochtimes.com": {"title": "", "link": "", "matches": 0},
+            "www.washingtonpost.com": {"title": "", "link": "", "matches": 0},
+        }
     for items in result_items:
         article_link = items["link"]
         article_site = items["displayLink"]
@@ -43,6 +47,7 @@ def categorize_news(results_object, tweet_kwords):
             news[article_site]["title"] = items["title"]
             news[article_site]["link"] = article_link
             news[article_site]["matches"] = kword_matches
+    news["next_page"] = next_page
     return news
 
 
