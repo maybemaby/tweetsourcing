@@ -6,7 +6,7 @@ if __name__ == "__main__":
     # Taking a tweet url and generating a query based off the keywords.
     api = tweets.create_api()
     tweet = tweets.retrieve_tweet(api)
-    tweets.save_images(tweet)
+    image_urls = tweets.save_images(tweet)
     print(f'The tweet text: "{tweet.full_text}"')
     wordlist = keywords.extract_kwords(tweet)
     generated_query = keywords.create_query(wordlist)

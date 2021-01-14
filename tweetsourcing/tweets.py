@@ -49,9 +49,10 @@ def save_images(tweet_object):
             res.raise_for_status()
         except:
             return print("No picture found.")
-        image_file = open("image1.jpg", "wb")
-        image_file.write(res.content)
-        image_file.close()
+    return image_url
+        # image_file = open("image1.jpg", "wb")
+        # image_file.write(res.content)
+        # image_file.close()
 
 
 if __name__ == "__main__":
