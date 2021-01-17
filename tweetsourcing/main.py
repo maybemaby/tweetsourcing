@@ -1,12 +1,14 @@
 import tweets
 import keywords
 import googlesearch
+import imagematch
 
 if __name__ == "__main__":
     # Taking a tweet url and generating a query based off the keywords.
     api = tweets.create_api()
     tweet = tweets.retrieve_tweet(api)
     image_urls = tweets.save_images(tweet)
+    imagematch.reverse_image_search(image_urls[0])
     print(f'The tweet text: "{tweet.full_text}"')
     wordlist = keywords.extract_kwords(tweet)
     generated_query = keywords.create_query(wordlist)

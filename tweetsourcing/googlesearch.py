@@ -21,6 +21,19 @@ def kword_search(query, startnum):
 
 
 def categorize_news(results_object, tweet_kwords, *args):
+    """Categorizes search results with most matches
+    based on the news source they came from.
+
+    Inputs
+    ------
+    Google search results object
+    Keyword list from tweet
+    optional: Existing news dict.
+    Returns
+    --------
+    Nested dictionary for each news source with the title 
+    and link to the article with the most keyword matches.
+    """
     result_items = results_object["items"]
     next_page = results_object["queries"]["nextPage"][0]["startIndex"]
     if len(args) > 0:
@@ -52,6 +65,15 @@ def categorize_news(results_object, tweet_kwords, *args):
 
 
 def extract_article(url):
+    """Extracts article text and keywords from url.
+
+    Inputs
+    ------
+    article url
+    Returns
+    -------
+    Keywords extracted with RAKE
+    """
     article = Article(url)
     article.download()
     article.parse()
@@ -62,6 +84,17 @@ def extract_article(url):
 
 
 def keyword_compare(kwords1, kwords2):
+    """Counts matches of keywords in kwords1 to 
+    keywords in kwords2.
+    
+    Inputs
+    ------
+    list kwords1: Keywords to search for within kwords2.
+    list kwords2: Keywords to search from.
+    Returns
+    -------
+    int matches: number of times keyword in kwords1 shows up in kwords2.
+    """
     matches = 0
     for kword in kwords1:
         for kword2 in kwords2:

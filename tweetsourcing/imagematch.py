@@ -1,4 +1,14 @@
 def reverse_image_search(uri):
+    """Google cloud vision reverse image search for full and partial matching images on the web.
+
+    Inputs
+    -------
+    Twitter picture url
+    Returns
+    -------
+    Prints matching pages and image links.
+    """
+
     from google.cloud import vision
 
     client = vision.ImageAnnotatorClient()
