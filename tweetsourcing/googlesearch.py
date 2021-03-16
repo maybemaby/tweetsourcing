@@ -96,14 +96,13 @@ def keyword_compare(kwords1, kwords2):
     list kwords2: Keywords to search from.
     Returns
     -------
-    int matches: number of times keyword in kwords1 shows up in kwords2.
+    float matches: number of times keyword in kwords1 shows up in kwords2.
     """
     matches = 0
-    for kword in kwords1:
-        for kword2 in kwords2:
-            if kword in kword2:
-                matches += 1
-    return matches
+    for kword in set(kwords1):
+        match_list = [match for match in set(kwords2) if kword in match]
+        matches += len(match_list)
+    return matches / len(kwords2)
 
 
 if __name__ == "__main__":
