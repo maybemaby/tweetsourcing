@@ -1,6 +1,6 @@
 from googleapiclient.discovery import build
 from credentials import cse_api_key, cse_id
-from newspaper import Article
+from newspaper import Article, news_pool
 from rake_nltk import Rake
 
 
@@ -51,13 +51,9 @@ def categorize_news(results_object, tweet_kwords, *args):
             "www.theepochtimes.com": {"title": "", "link": "", "matches": 0},
             "www.washingtonpost.com": {"title": "", "link": "", "matches": 0},
         }
-    for items in result_items:
-        article_link = items["link"]
-        article_site = items["displayLink"]
-        if article_site in news:
-            article_kwords = extract_article(article_link)
-        else:
-            continue
+        # comprehension breakdown: if article site in news dict, add the link to the article to list
+        article_links = [item["link"] for item in result_items if item["displayLink"] in news]
+        article_kwords = extract_articles(article_links)
         kword_matches = keyword_compare(tweet_kwords, article_kwords)
         if kword_matches > news[article_site]["matches"]:
             news[article_site]["title"] = items["title"]
@@ -67,19 +63,20 @@ def categorize_news(results_object, tweet_kwords, *args):
     return news
 
 
-def extract_article(url):
+def extract_articles(url_list):
     """Extracts article text and keywords from url.
 
     Inputs
     ------
-    article url
+    url_list: list
     Returns
     -------
     Keywords extracted with RAKE
     """
-    article = Article(url)
-    article.download()
-    article.parse()
+    articles = [Article(url) for url in url_list]
+    news_pool.set(articles)
+    news_pool.join()
+    parsed_articles = [article.parse() for article in articles]
     r = Rake()
     r.extract_keywords_from_text(article.text)
     article_kwords = r.get_ranked_phrases()
