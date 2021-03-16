@@ -52,13 +52,21 @@ def categorize_news(results_object, tweet_kwords, *args):
             "www.washingtonpost.com": {"title": "", "link": "", "matches": 0},
         }
         # comprehension breakdown: if article site in news dict, add the link to the article to list
-        article_links = [item["link"] for item in result_items if item["displayLink"] in news]
-        article_kwords = extract_articles(article_links)
-        kword_matches = keyword_compare(tweet_kwords, article_kwords)
-        if kword_matches > news[article_site]["matches"]:
-            news[article_site]["title"] = items["title"]
-            news[article_site]["link"] = article_link
-            news[article_site]["matches"] = kword_matches
+        article_links = [
+            item["link"] for item in result_items if item["displayLink"] in news
+        ]
+        article_titles = [
+            item["title"] for item in result_items if item["displayLink"] in news
+        ]
+        article_sites = [
+            item["displayLink"] for item in result_items if item["displayLink"] in news
+        ]
+        for index, article_kwords in enumerate(extract_articles(article_links)):
+            kword_matches = keyword_compare(tweet_kwords, article_kwords)
+            if kword_matches > news[article_sites[index]]["matches"]:
+                news[article_sites[index]]["title"] = article_titles[index]
+                news[article_sites[index]]["link"] = article_links[index]
+                news[article_sites[index]]["matches"] = kword_matches
     news["next_page"] = next_page
     return news
 
@@ -71,16 +79,17 @@ def extract_articles(url_list):
     url_list: list
     Returns
     -------
-    Keywords extracted with RAKE
+    generator with keywords parsed from article url list
     """
     articles = [Article(url) for url in url_list]
     news_pool.set(articles)
     news_pool.join()
-    parsed_articles = [article.parse() for article in articles]
+    parsed_articles = (article.parse() for article in articles)
     r = Rake()
-    r.extract_keywords_from_text(article.text)
-    article_kwords = r.get_ranked_phrases()
-    return article_kwords
+    for article in parsed_articles:
+        r.extract_keywords_from_text(article.text)
+        article_kwords = r.get_ranked_phrases()
+        yield article_kwords
 
 
 def keyword_compare(kwords1, kwords2):
