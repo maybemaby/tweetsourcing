@@ -31,7 +31,7 @@ def categorize_news(results_object, tweet_kwords, *args):
     optional: Existing news dict.
     Returns
     --------
-    Nested dictionary for each news source with the title 
+    Nested dictionary for each news source with the title
     and link to the article with the most keyword matches.
     """
     result_items = results_object["items"]
@@ -54,7 +54,10 @@ def categorize_news(results_object, tweet_kwords, *args):
     for items in result_items:
         article_link = items["link"]
         article_site = items["displayLink"]
-        article_kwords = extract_article(article_link)
+        if article_site in news:
+            article_kwords = extract_article(article_link)
+        else:
+            continue
         kword_matches = keyword_compare(tweet_kwords, article_kwords)
         if kword_matches > news[article_site]["matches"]:
             news[article_site]["title"] = items["title"]
@@ -84,9 +87,9 @@ def extract_article(url):
 
 
 def keyword_compare(kwords1, kwords2):
-    """Counts matches of keywords in kwords1 to 
+    """Counts matches of keywords in kwords1 to
     keywords in kwords2.
-    
+
     Inputs
     ------
     list kwords1: Keywords to search for within kwords2.

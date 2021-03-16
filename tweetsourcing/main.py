@@ -8,7 +8,8 @@ if __name__ == "__main__":
     api = tweets.create_api()
     tweet = tweets.retrieve_tweet(api)
     image_urls = tweets.save_images(tweet)
-    imagematch.reverse_image_search(image_urls[0])
+    if image_urls:
+        imagematch.reverse_image_search(image_urls[0])
     print(f'The tweet text: "{tweet.full_text}"')
     wordlist = keywords.extract_kwords(tweet)
     generated_query = keywords.create_query(wordlist)
@@ -24,7 +25,8 @@ if __name__ == "__main__":
             if site_dict["title"] == "":
                 startnum = news["next_page"]
                 break
-
+    
+    news.pop("next_page")
     for k, v in news.items():
         if v["title"] != "":
             try:
