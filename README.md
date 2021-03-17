@@ -14,8 +14,9 @@ on the individual to be skeptical and perform due diligence.<br>
 - Tell you whether the tweet's statements are true. This is simply a tool to help you draw your own conclusions.
 
 ### Ways this can be improved:
-- Improve tweet keyword recognition with custom nltk model, custom stop words, etc.
-- Add backup search api for when the google api reaches its limit. (Bing api?)
-    - Currently only keyword compares the first 50 google results as a method to allow for more searches per day.
-- Implement as a web app.
-- Speed up categorize_news() function.
+- [ ] Improve tweet keyword recognition with custom nltk model, custom stop words, etc.
+- [ ] Add backup search api for when the google api reaches its limit. (Bing api?)<br>
+*Currently only keyword compares first 50 google results as a method to allow for more searches per day with the free google api quota.*
+- [ ] Implement as web app.
+- [x] Speed up categorize_news() function.<br>
+*Used newspaper module's multithreading functionality to increase speed up to 8x.*
