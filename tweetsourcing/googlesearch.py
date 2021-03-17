@@ -84,9 +84,9 @@ def extract_articles(url_list):
     articles = [Article(url) for url in url_list]
     news_pool.set(articles)
     news_pool.join()
-    parsed_articles = (article.parse() for article in articles)
     r = Rake()
-    for article in parsed_articles:
+    for article in articles:
+        article.parse()
         r.extract_keywords_from_text(article.text)
         article_kwords = r.get_ranked_phrases()
         yield article_kwords

@@ -18,7 +18,7 @@ if __name__ == "__main__":
     while int(startnum) <= 50:
         results = googlesearch.kword_search(generated_query, startnum)
         try:
-            news = googlesearch.categorize_news(results, wordlist, news)
+            news = googlesearch.categorize_news(results, wordlist, news) #noqa
         except:
             news = googlesearch.categorize_news(results, wordlist)
         for site_dict in news.values():
